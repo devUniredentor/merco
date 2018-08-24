@@ -1,8 +1,16 @@
 package br.com.sistemas.soscidadao;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,30 +29,64 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.sistemas.soscidadao.fragment.LoginFragment;
+import br.com.sistemas.soscidadao.fragment.NovaDenunciaFragment;
 import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.FirebaseUtils;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    private Query queryDenuncias ;
+    private Query queryDenuncias;
     private List<Denuncia> denuncias = new ArrayList<>();
     private GoogleMap mMap;
     private FirebaseAuth firebaseAuth;
+    private double latitude, longitude;
+
+    private FloatingActionButton floatingActionButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
+        getCurrentLatLong();
         carregarDenuncias();
-
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-       if (FirebaseAuth.getInstance().getCurrentUser() == null){
-           new LoginFragment().show(getSupportFragmentManager(),"");
-       }
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            new LoginFragment().show(getSupportFragmentManager(), "");
+        }
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                NovaDenunciaFragment.newInstance(latitude, longitude).show(getSupportFragmentManager(),"");
+
+            }
+        });
+    }
+
+    private void getCurrentLatLong() {
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(locationManager
+                .getBestProvider(criteria, false));
+         latitude = location.getLatitude();
+         longitude = location.getLongitude();
     }
 
     private void carregarDenuncias() {
