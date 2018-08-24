@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "148019541631",
+    "firebase_url": "https://soscidadao-ef5af.firebaseio.com",
+    "project_id": "soscidadao-ef5af",
+    "storage_bucket": "soscidadao-ef5af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148019541631:android:827ec891fd29f5c4",
+        "android_client_info": {
+          "package_name": "br.com.sistemas.soscidadao"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148019541631-srgukobl9proibc99sdvgen6oqdhdn11.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.sistemas.soscidadao",
+            "certificate_hash": "26c6d2a6273ee79fd15072e7bd3919438472526b"
+          }
+        },
+        {
+          "client_id": "148019541631-2rm07378is5apfrqapl9p3mnpjlhr52v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4uLsmU0Wyn2hxF--0Xpyamau_yQTOBd0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "148019541631-2rm07378is5apfrqapl9p3mnpjlhr52v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
