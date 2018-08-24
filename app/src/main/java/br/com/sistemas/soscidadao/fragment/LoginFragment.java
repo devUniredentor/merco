@@ -1,10 +1,12 @@
 package br.com.sistemas.soscidadao.fragment;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +37,7 @@ import br.com.sistemas.soscidadao.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends DialogFragment {
 
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 1234;
@@ -53,6 +55,8 @@ public class LoginFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
@@ -64,7 +68,7 @@ public class LoginFragment extends Fragment {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-
+        signIn();
 
 
     }

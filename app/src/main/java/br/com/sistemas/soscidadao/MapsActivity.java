@@ -4,12 +4,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -18,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.sistemas.soscidadao.fragment.LoginFragment;
 import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.FirebaseUtils;
 
@@ -25,16 +28,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Query queryDenuncias ;
     private List<Denuncia> denuncias = new ArrayList<>();
     private GoogleMap mMap;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         carregarDenuncias();
+
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+       if (FirebaseAuth.getInstance().getCurrentUser() == null){
+           new LoginFragment().show(getSupportFragmentManager(),"");
+       }
     }
 
     private void carregarDenuncias() {
@@ -88,8 +98,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        LatLng sydney = new LatLng(-21.1899737, -41.9085663);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15.0f));
+
+        LatLng sydney1 = new LatLng(-21.1903299, -41.9117128);
+        mMap.addMarker(new MarkerOptions().position(sydney1).title("Marker in Sydney"));
+
+        LatLng sydney2 = new LatLng(-21.1953173, -41.9093979);
+        mMap.addMarker(new MarkerOptions().position(sydney2).title("Marker in Sydney"));
     }
 }
