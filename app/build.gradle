@@ -11,9 +11,14 @@ android {
     }
     buildTypes {
         release {
+            manifestPlaceholders = [ google_map_key:"AIzaSyB_YDiM4Q0AgAes_wKyoLZ8zqFDgwTgF8c"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            manifestPlaceholders = [ google_map_key:"AIzaSyB_YDiM4Q0AgAes_wKyoLZ8zqFDgwTgF8c"]
+        }
+
     }
 }
 
@@ -21,9 +26,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.1'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-auth:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
 
 

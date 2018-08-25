@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/logo" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         >
 
-    </Spinner>
+
 
     <TextView
         android:layout_margin="8dp"
@@ -67,5 +67,12 @@
         android:layout_gravity="center"
         android:background="@drawable/buttonestilizado"
         android:layout_height="wrap_content" />
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progress"
+            android:layout_margin="15dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>
