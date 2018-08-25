@@ -39,6 +39,6 @@ public class DetalhesProblemasFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 
-
     }
+
 }

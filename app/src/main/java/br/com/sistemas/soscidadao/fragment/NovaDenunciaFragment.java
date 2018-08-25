@@ -2,6 +2,7 @@ package br.com.sistemas.soscidadao.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.Spinner;
 import br.com.sistemas.soscidadao.R;
 import br.com.sistemas.soscidadao.utils.ConstantUtils;
 
-public class NovaDenunciaFragment extends Fragment {
+public class NovaDenunciaFragment extends DialogFragment {
     private  Bundle bundle;
     private double latitude, longitude;
     private Spinner spinnerProblema, spinnerCategoria;
