@@ -1,4 +1,5 @@
-package br.com.sistemas.soscidadao.fragment;
+package br.com.sistemas.soscidadao.
+        fragment;
 
 import android.graphics.Point;
 import android.os.Bundle;
