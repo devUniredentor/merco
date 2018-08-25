@@ -63,7 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                NovaDenunciaFragment.newInstance(latitude, longitude).show(getSupportFragmentManager(),"");
+                NovaDenunciaFragment denunciaFragment = new NovaDenunciaFragment();
+                denunciaFragment.setLocalizacao(latitude, longitude);
+                denunciaFragment.show(getSupportFragmentManager(),"");
 
             }
         });
@@ -100,6 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     for(DataSnapshot snapshot : dataSnapshot.getChildren()){
 
                         Denuncia denuncia = snapshot.getValue(Denuncia.class);
+                        denuncia.setId(snapshot.getKey());
                         denuncias.add(denuncia);
                         setarDenuncias();
                     }
@@ -120,7 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (Denuncia denuncia: denuncias) {
                 LatLng latLng = new LatLng(denuncia.getLatitude(), denuncia.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title(denuncia.getCategoria()));
+                mMap.addMarker(new MarkerOptions().position(latLng).title(denuncia.getProblema()));
         }
 
     }

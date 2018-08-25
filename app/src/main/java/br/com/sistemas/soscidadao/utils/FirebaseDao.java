@@ -10,7 +10,7 @@ public class FirebaseDao {
 
 public static void novaDenuncia(Denuncia denuncia){
     DatabaseReference reference = FirebaseUtils.getFirebase();
-    reference.child(ConstantUtils.DENUNCIAS).child(denuncia.getId()).setValue(denuncia);
+    reference.child(ConstantUtils.DENUNCIAS).push().setValue(denuncia);
 
 }
 

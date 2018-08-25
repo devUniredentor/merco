@@ -4,13 +4,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class Denuncia implements Serializable {
     private String id;
     private String idUser ;
-    private String categoria;
     private String problema;
     private String descricao;
     private boolean resolvido;
@@ -19,10 +19,9 @@ public class Denuncia implements Serializable {
     private double latitude, longitude;
 
 
-    public Denuncia(String id, String idUser, String categoria, String problema, String descricao, boolean resolvido, boolean reportado, long dateCriacao, long dataFinalizacao, double latitude, double longitude) {
+    public Denuncia(String id, String idUser, String problema, String descricao, boolean resolvido, boolean reportado, long dateCriacao, long dataFinalizacao, double latitude, double longitude) {
         this.id = id;
         this.idUser = idUser;
-        this.categoria = categoria;
         this.problema = problema;
         this.descricao = descricao;
         this.resolvido = resolvido;
@@ -34,14 +33,8 @@ public class Denuncia implements Serializable {
     }
 
     public Denuncia() {
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+        setDateCriacao(Calendar.getInstance().getTimeInMillis());
+        setResolvido(false);
     }
 
     public String getProblema() {

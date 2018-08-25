@@ -1,9 +1,11 @@
 package br.com.sistemas.soscidadao.fragment;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import br.com.sistemas.soscidadao.R;
+import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.ConstantUtils;
+import br.com.sistemas.soscidadao.utils.FirebaseDao;
 
 public class NovaDenunciaFragment extends DialogFragment {
     private  Bundle bundle;
@@ -22,7 +28,7 @@ public class NovaDenunciaFragment extends DialogFragment {
     private Spinner spinnerProblema, spinnerCategoria;
     private String categoria, problema;
     private String[] categorias = {"", "", ""};
-    private String[] problemas = {"", "", ""};
+    private String[] problemas = {"Acidente de trânsito", "Alagamento", "Barulho", "Buraco", "Crime", "Esgoto", "Foco de dengue", "Lixo", "Outros"};
     private Button buttonEnviar;
     private EditText  editTextDescricao;
 
@@ -45,6 +51,24 @@ public class NovaDenunciaFragment extends DialogFragment {
         initSpinnerCategoria();
         initSpinnerProblema();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (getDialog() == null)
+            return;
+
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int largura = (int) (size.x * 0.8);
+        int altura = (int) (size.y *0.8);
+        getDialog().getWindow().setLayout(largura,altura);
+
+
     }
 
     private void initSpinnerCategoria() {
@@ -89,6 +113,7 @@ public class NovaDenunciaFragment extends DialogFragment {
         spinnerCategoria = view.findViewById(R.id.spinnerCategoria);
         spinnerProblema = view.findViewById(R.id.spinnerProblema);
         buttonEnviar = view.findViewById(R.id.buttonEnviar);
+        editTextDescricao = view.findViewById(R.id.editDescricao);
 
         if(bundle!= null){
             latitude = getArguments().getDouble(ConstantUtils.LATITUDE);
@@ -101,8 +126,18 @@ public class NovaDenunciaFragment extends DialogFragment {
     buttonEnviar.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(isEmpty()){
 
+            String descricao = editTextDescricao.getText().toString();
+            if(descricao == null || descricao.isEmpty()){
+                editTextDescricao.requestFocus();
+                editTextDescricao.setError(getResources().getString(R.string.campo_obrigatorio));
+            }else{
+                Denuncia denuncia = new Denuncia();
+                denuncia.setDescricao(descricao);
+                denuncia.setIdUser(FirebaseAuth.getInstance().getUid());
+                denuncia.setLatitude(latitude);
+                denuncia.setLongitude(longitude);
+                FirebaseDao.novaDenuncia(denuncia);
             }
         }
     });
@@ -127,8 +162,7 @@ public class NovaDenunciaFragment extends DialogFragment {
         if (editTextDescricao.getText().toString().length() == 0) {
             campoComFoco = editTextDescricao;
 
-            editTextDescricao.requestFocus();
-            editTextDescricao.setError(getResources().getString(R.string.campo_obrigatorio));
+
             empty = false;
         }
 
@@ -139,5 +173,10 @@ public class NovaDenunciaFragment extends DialogFragment {
             spinner.requestFocus();
         }
         return empty;
+    }
+
+    public void setLocalizacao(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
