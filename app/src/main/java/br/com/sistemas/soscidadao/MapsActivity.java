@@ -309,20 +309,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                mMap.addMarker(new MarkerOptions().position(latLng).title(denuncia.getProblema()).icon();
                 setarNoMapa(denuncia);
         }
-
-
-
-
-
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(MapsActivity.this, ""+marker.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-
+        
     }
 
     private void setarNoMapa(final Denuncia denuncia) {
