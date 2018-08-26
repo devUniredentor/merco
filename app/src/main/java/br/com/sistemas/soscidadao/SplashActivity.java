@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.splash_activity);
-        StartAnimations();
+
 
         LocationManager mListener = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if(mListener != null){
@@ -48,22 +48,7 @@ public class SplashActivity extends AppCompatActivity {
                     PermissionUtils.LocationSettingDialog.newInstance().show(getSupportFragmentManager(), "Setting");
                 }
             }
-        }, 1500);
-    }
-
-    private void StartAnimations() {
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.alpha);
-        anim.reset();
-        LinearLayout l= findViewById(R.id.lin_lay);
-        l.clearAnimation();
-        l.startAnimation(anim);
-
-        anim = AnimationUtils.loadAnimation(this, R.anim.translate);
-        anim.reset();
-        TextView tv = findViewById(R.id.text);
-        tv.clearAnimation();
-        tv.startAnimation(anim);
-
+        }, 500);
     }
 
     @Override

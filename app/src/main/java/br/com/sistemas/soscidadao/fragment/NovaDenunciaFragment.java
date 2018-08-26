@@ -1,6 +1,7 @@
 package br.com.sistemas.soscidadao.
         fragment;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +20,9 @@ import android.widget.Spinner;
 
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import br.com.sistemas.soscidadao.LoginActivity;
 import br.com.sistemas.soscidadao.R;
 import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.ConstantUtils;
@@ -120,15 +123,20 @@ public class NovaDenunciaFragment extends DialogFragment {
                 editTextDescricao.requestFocus();
                 editTextDescricao.setError(getResources().getString(R.string.campo_obrigatorio));
             }else{
-                Denuncia denuncia = new Denuncia();
-                denuncia.setDescricao(descricao);
-                denuncia.setIdUser(FirebaseAuth.getInstance().getUid());
-                denuncia.setProblema(problema);
-                denuncia.setLatitude(latitude);
-                denuncia.setLongitude(longitude);
-                FirebaseDao.novaDenuncia(denuncia);
-                getDialog().dismiss();
-                progressBar.setVisibility(View.GONE);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user != null){
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                }else {
+                    Denuncia denuncia = new Denuncia();
+                    denuncia.setDescricao(descricao);
+                    denuncia.setIdUser(FirebaseAuth.getInstance().getUid());
+                    denuncia.setProblema(problema);
+                    denuncia.setLatitude(latitude);
+                    denuncia.setLongitude(longitude);
+                    FirebaseDao.novaDenuncia(denuncia);
+                    getDialog().dismiss();
+                    progressBar.setVisibility(View.GONE);
+                }
             }
 
 

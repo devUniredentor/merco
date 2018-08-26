@@ -1,22 +1,17 @@
 package br.com.sistemas.soscidadao;
 
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -30,7 +25,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,16 +34,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,15 +64,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private String provider;
 
-    static final int REQUEST_LOCATION = 1;
     private Query queryDenuncias;
     private List<Denuncia> denuncias;
     private GoogleMap mMap;
-    private double latitude;
-    private double longitude;
-
-    private FloatingActionButton floatingActionButton;
-    private Location location;
+    private FirebaseUser user;
 
 
     @Override
@@ -95,28 +85,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             initGoogleMapLocation();
         }
 
-        floatingActionButton = findViewById(R.id.floatingActionButton);
-
         carregarDenuncias();
 
 
-//        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-//            new LoginFragment().show(getSupportFragmentManager(), "");
-//        }
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mCurrentLocation!= null){
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
-                    NovaDenunciaFragment denunciaFragment = new NovaDenunciaFragment();
-                    denunciaFragment.setLocalizacao(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                    denunciaFragment.show(getSupportFragmentManager(),"");
-                       }
 
-//               ;
 
-            }
-        });
 
 
 
@@ -158,8 +133,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 {
                     Log.e("Location(Lat)==",""+mCurrentLocation.getLatitude());
                     Log.e("Location(Long)==",""+mCurrentLocation.getLongitude());
-                    latitude = mCurrentLocation.getLatitude();
-                    longitude = mCurrentLocation.getLongitude();
                 }
 
 
@@ -167,6 +140,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
                 options.icon(icon);
+                try{
+                    options.title(user.getDisplayName());
+                }catch (Exception e){
+                    options.title("Eu");
+                }
                 Marker marker = mMap.addMarker(options);
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 17));
@@ -349,9 +327,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                chamaNovaDenuncia(latLng);
+            }
+        });
+    }
+
+    public void chamaNovaDenuncia(LatLng latLng) {
+
+        NovaDenunciaFragment denunciaFragment = new NovaDenunciaFragment();
+        denunciaFragment.setLocalizacao(latLng.latitude,latLng.longitude);
+        denunciaFragment.show(getSupportFragmentManager(),"");
 
 
     }
-
-
 }
