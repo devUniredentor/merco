@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import br.com.sistemas.soscidadao.LoginActivity;
 import br.com.sistemas.soscidadao.R;
 import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.ConstantUtils;
@@ -33,10 +32,12 @@ public class NovaDenunciaFragment extends DialogFragment {
     private double latitude, longitude;
     private Spinner spinnerProblema;
     private String categoria, problema;
+
     private ProgressBar progressBar;
     private String[] problemas = {"Acidente de trânsito", "Alagamento", "Barulho", "Buraco", "Crime", "Esgoto", "Foco de dengue", "Lixo", "Outros"};
     private Button buttonEnviar;
     private EditText  editTextDescricao;
+    private GoogleSignInAccount account;
 
     public  static NovaDenunciaFragment newInstance(double latitude, double longitude){
 
@@ -55,6 +56,7 @@ public class NovaDenunciaFragment extends DialogFragment {
         View view  = inflater.inflate(R.layout.fragment_nova_denuncia, container , false);
         initView(view);
         initSpinnerProblema();
+        account = GoogleSignIn.getLastSignedInAccount(getActivity());
         return view;
     }
 
@@ -123,13 +125,13 @@ public class NovaDenunciaFragment extends DialogFragment {
                 editTextDescricao.requestFocus();
                 editTextDescricao.setError(getResources().getString(R.string.campo_obrigatorio));
             }else{
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user != null){
-                    startActivity(new Intent(getContext(), LoginActivity.class));
+
+                if(account != null){
+                    Toast.makeText(getActivity(), "Algo deu errado!", Toast.LENGTH_SHORT).show();
                 }else {
                     Denuncia denuncia = new Denuncia();
                     denuncia.setDescricao(descricao);
-                    denuncia.setIdUser(FirebaseAuth.getInstance().getUid());
+                    denuncia.setIdUser(account.getId());
                     denuncia.setProblema(problema);
                     denuncia.setLatitude(latitude);
                     denuncia.setLongitude(longitude);

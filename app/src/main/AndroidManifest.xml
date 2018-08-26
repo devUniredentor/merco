@@ -31,7 +31,8 @@
         <activity
             android:name=".MapsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:theme="@style/ThemeOverlay.MyNoTitleActivity"></activity>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/MySplash">
@@ -40,6 +41,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <meta-data
@@ -49,7 +51,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

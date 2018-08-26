@@ -1,5 +1,6 @@
 package br.com.sistemas.soscidadao;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -7,13 +8,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
@@ -34,29 +40,31 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.sistemas.soscidadao.fragment.DetalhesProblemasFragment;
-import br.com.sistemas.soscidadao.fragment.LoginFragment;
 import br.com.sistemas.soscidadao.fragment.NovaDenunciaFragment;
 import br.com.sistemas.soscidadao.models.Denuncia;
+import br.com.sistemas.soscidadao.utils.ConstantUtils;
 import br.com.sistemas.soscidadao.utils.FirebaseUtils;
 import br.com.sistemas.soscidadao.utils.PermissionUtils;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final String TAG = "SignInActivity";
+    private static final int RC_SIGN_IN = 9001;
+
+    private GoogleSignInClient mGoogleSignInClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private Location mCurrentLocation;
@@ -67,7 +75,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Query queryDenuncias;
     private List<Denuncia> denuncias;
     private GoogleMap mMap;
-    private FirebaseUser user;
+
+    private   GoogleSignInAccount account;
+
+
 
 
     @Override
@@ -75,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        provider = getIntent().getStringExtra("provider");
+        provider = getIntent().getStringExtra(ConstantUtils.PROVIDER);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -88,13 +99,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         carregarDenuncias();
 
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
 
 
 
 
+        account = GoogleSignIn.getLastSignedInAccount(this);
 
 
 
@@ -141,7 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
                 options.icon(icon);
                 try{
-                    options.title(user.getDisplayName());
+                    options.title(account.getDisplayName());
                 }catch (Exception e){
                     options.title("Eu");
                 }
@@ -330,17 +345,90 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                chamaNovaDenuncia(latLng);
+                if(account!=null){
+                    chamaNovaDenuncia(latLng);
+                }else {
+                 signIn();
+                }
+
             }
         });
     }
 
     public void chamaNovaDenuncia(LatLng latLng) {
-
         NovaDenunciaFragment denunciaFragment = new NovaDenunciaFragment();
         denunciaFragment.setLocalizacao(latLng.latitude,latLng.longitude);
         denunciaFragment.show(getSupportFragmentManager(),"");
 
 
+    }
+
+
+    //signIn Google
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            this.account =account;
+            updateUI(account);
+        } catch (ApiException e) {
+
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
+        }
+    }
+
+    private void updateUI(@Nullable GoogleSignInAccount account) {
+        if (account != null) {
+            this.account =account;
+
+        } else {
+            this.account = null;
+        }
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        updateUI(account);
+
+    }
+    private void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        updateUI(null);
+
+                    }
+                });
+    }
+    private void revokeAccess() {
+        mGoogleSignInClient.revokeAccess()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        updateUI(null);
+
+                    }
+                });
     }
 }

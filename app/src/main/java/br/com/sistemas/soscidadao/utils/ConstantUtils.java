@@ -4,4 +4,5 @@ public  class ConstantUtils {
     public static final String DENUNCIAS = "DENUNCIAS";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
+    public static final String PROVIDER = "provider";
 }

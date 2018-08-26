@@ -6,4 +6,6 @@
     <color name="Branco">#f00000</color>
     <color name="Verde">#48a55e</color>
     <color name="Roxo">#721380</color>
+    <color name="blue_grey_900">#263238</color>
+    <color name="blue_grey_700">#455A64</color>
 </resources>
