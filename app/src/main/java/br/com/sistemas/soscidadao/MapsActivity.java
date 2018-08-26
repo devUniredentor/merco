@@ -309,7 +309,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                mMap.addMarker(new MarkerOptions().position(latLng).title(denuncia.getProblema()).icon();
                 setarNoMapa(denuncia);
         }
-        
+
     }
 
     private void setarNoMapa(final Denuncia denuncia) {
