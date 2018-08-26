@@ -22,16 +22,7 @@
         />
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_margin="15dp"
-        map:fabSize="normal"
 
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:tint="#fff"
-        android:src="@android:drawable/ic_input_add" />
 </FrameLayout>
 </RelativeLayout>
 
