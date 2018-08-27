@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -57,16 +58,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.sistemas.soscidadao.fragment.DetalhesProblemasFragment;
-import br.com.sistemas.soscidadao.fragment.NovaDenunciaFragment;
+
 import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.ConstantUtils;
+import br.com.sistemas.soscidadao.utils.FirebaseDao;
 import br.com.sistemas.soscidadao.utils.FirebaseUtils;
 import br.com.sistemas.soscidadao.utils.PermissionUtils;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 
+    private String[] problemas = {"Acidente de trânsito", "Alagamento", "Barulho", "Buraco", "Crime", "Esgoto", "Foco de dengue", "Lixo", "Outros"};
 
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
@@ -331,7 +333,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             MarkerOptions markerOptions = new MarkerOptions();
             LatLng latLng = new LatLng(denuncia.getLatitude(), denuncia.getLongitude());
             markerOptions.position(latLng).title(denuncia.getProblema());
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            if(denuncia.isResolvido()){
+                markerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            }else {
+                markerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            }
+
+
 
 
             Marker marker = mMap.addMarker(markerOptions);
@@ -342,10 +350,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onInfoWindowClick(Marker marker) {
                     Denuncia denuncia = (Denuncia) marker.getTag();
                     if(denuncia != null) {
-                        DetalhesProblemasFragment detalhesProblemasFragment = new DetalhesProblemasFragment();
-                        detalhesProblemasFragment.setDenuncia(denuncia);
-                        detalhesProblemasFragment.setLocation(denuncia.getLatitude(), denuncia.getLongitude());
-                        detalhesProblemasFragment.show(getSupportFragmentManager(), "detalhesFragment");
+
+                        FirebaseDao.dialogDetalhesDenuncia(MapsActivity.this, denuncia);
                     }
                 }
             });
@@ -364,7 +370,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMapLongClick(LatLng latLng) {
                 if (mAuth.getCurrentUser() != null) {
-                    chamaNovaDenuncia(latLng);
+//                    chamaNovaDenuncia(latLng);
+
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(MapsActivity.this, android.R.layout.simple_spinner_item, problemas);
+                    FirebaseDao.dialogNovaDenuncia(MapsActivity.this, latLng, adapter);
                 }else {
                     signIn();
                 }
@@ -376,13 +386,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void chamaNovaDenuncia(LatLng latLng) {
-        NovaDenunciaFragment denunciaFragment = new NovaDenunciaFragment();
-        denunciaFragment.setLocalizacao(latLng.latitude,latLng.longitude);
-        denunciaFragment.show(getSupportFragmentManager(),"");
-
-
-    }
 
         //GoogleSignIn
         @Override
