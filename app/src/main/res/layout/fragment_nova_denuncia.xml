@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
-    android:background="#c7c5c5">
+    android:background="#33515151"
+>
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_margin="10dp">
     <ImageView
-        android:layout_width="match_parent"
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:src="@drawable/logo" />
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-
-
+        android:src="@drawable/logo"/>
     <TextView
+        android:layout_below="@+id/logo"
+        android:id="@+id/text"
         android:layout_margin="8dp"
         android:layout_marginTop="25dp"
         android:textStyle="bold"
         android:text="Problema:"
         android:textColor="#fff"
-        android:textSize="17sp"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Spinner
+        
+        android:layout_below="@+id/text"
         android:layout_margin="8dp"
         android:layout_marginTop="25dp"
         android:id="@+id/spinnerProblema"
@@ -37,8 +41,10 @@
     </Spinner>
 
     <TextView
+        android:layout_below="@id/spinnerProblema"
+        android:id="@+id/text2"
         android:layout_margin="8dp"
-        android:textSize="17sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#fff"
         android:layout_marginTop="25dp"
@@ -47,26 +53,25 @@
         android:layout_height="wrap_content" />
 
         <EditText
+            android:layout_below="@+id/text2"
             android:id="@+id/editDescricao"
             android:layout_width="match_parent"
             android:layout_height="97dp"
             android:background="@drawable/edittextestilizado"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_margin="8dp"
             android:inputType="textMultiLine" />
     <Button
-        android:text="ENviar"
-        android:textColor="#fff"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold"
         android:id="@+id/buttonEnviar"
+        android:textColor="@android:color/white"
+        android:layout_margin="8dp"
+        android:layout_below="@id/editDescricao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enviar"
+        android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_setinha"
-        android:paddingLeft="40dp"
-        android:paddingRight="30dp"
-        android:layout_width="150dp"
-        android:layout_gravity="center"
-        android:background="@drawable/buttonestilizado"
-        android:layout_height="wrap_content" />
+        android:theme="@style/MyButton"
+        android:drawableEnd="@drawable/ic_setinha" />
         <ProgressBar
             android:visibility="gone"
             android:id="@+id/progress"
@@ -74,5 +79,5 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

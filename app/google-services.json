@@ -15,21 +15,21 @@
       },
       "oauth_client": [
         {
-          "client_id": "148019541631-srgukobl9proibc99sdvgen6oqdhdn11.apps.googleusercontent.com",
+          "client_id": "148019541631-976l9tj2joqlfnhm1c2vk906qcnc0h2j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "br.com.sistemas.soscidadao",
-            "certificate_hash": "26c6d2a6273ee79fd15072e7bd3919438472526b"
+            "certificate_hash": "24e69a6939205b26c1d5dad442518113244af515"
           }
         },
         {
-          "client_id": "148019541631-2rm07378is5apfrqapl9p3mnpjlhr52v.apps.googleusercontent.com",
+          "client_id": "148019541631-qhv2fl48gsh2vln30v0v3copf3g4fmqm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_YDiM4Q0AgAes_wKyoLZ8zqFDgwTgF8c"
+          "current_key": "AIzaSyABFC_In2dGLmWlXj676vPFii5wD7GxChk"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "148019541631-2rm07378is5apfrqapl9p3mnpjlhr52v.apps.googleusercontent.com",
+              "client_id": "148019541631-qhv2fl48gsh2vln30v0v3copf3g4fmqm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

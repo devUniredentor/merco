@@ -6,10 +6,13 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,7 +24,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseAuth;
 
+import br.com.sistemas.soscidadao.MapsActivity;
 import br.com.sistemas.soscidadao.R;
 import br.com.sistemas.soscidadao.models.Denuncia;
 import br.com.sistemas.soscidadao.utils.ConstantUtils;
@@ -38,6 +43,7 @@ public class NovaDenunciaFragment extends DialogFragment {
     private Button buttonEnviar;
     private EditText  editTextDescricao;
     private GoogleSignInAccount account;
+   private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public  static NovaDenunciaFragment newInstance(double latitude, double longitude){
 
@@ -50,13 +56,15 @@ public class NovaDenunciaFragment extends DialogFragment {
 
 
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_nova_denuncia, container , false);
-        initView(view);
-        initSpinnerProblema();
-        account = GoogleSignIn.getLastSignedInAccount(getActivity());
+//            getActivity().getActionBar().setTitle("Denúncia");
+            initView(view);
+            initSpinnerProblema();
+
         return view;
     }
 
@@ -68,12 +76,14 @@ public class NovaDenunciaFragment extends DialogFragment {
             return;
 
 
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int largura = (int) (size.x * 0.8);
-        int altura = (int) (size.y *0.8);
-        getDialog().getWindow().setLayout(largura,altura);
+//        Display display = getActivity().getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        int largura = (int) (size.x * 0.8);
+//        int altura = (int) (size.y *0.8);
+//        getDialog().getWindow().setLayout(largura,altura);
+//            getDialog().setTitle("Denúncia");
+           getDialog().setTitle("Denúncia");
 
 
     }
@@ -126,18 +136,19 @@ public class NovaDenunciaFragment extends DialogFragment {
                 editTextDescricao.setError(getResources().getString(R.string.campo_obrigatorio));
             }else{
 
-                if(account != null){
-                    Toast.makeText(getActivity(), "Algo deu errado!", Toast.LENGTH_SHORT).show();
-                }else {
+                if(mAuth != null){
                     Denuncia denuncia = new Denuncia();
                     denuncia.setDescricao(descricao);
-                    denuncia.setIdUser(account.getId());
+                    denuncia.setIdUser(mAuth.getCurrentUser().getUid());
                     denuncia.setProblema(problema);
                     denuncia.setLatitude(latitude);
                     denuncia.setLongitude(longitude);
                     FirebaseDao.novaDenuncia(denuncia);
                     getDialog().dismiss();
                     progressBar.setVisibility(View.GONE);
+
+                }else {
+                    Toast.makeText(getActivity(), "Algo deu errado!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -151,4 +162,7 @@ public class NovaDenunciaFragment extends DialogFragment {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
+
+    
 }
