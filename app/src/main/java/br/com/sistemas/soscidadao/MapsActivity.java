@@ -2,6 +2,9 @@ package br.com.sistemas.soscidadao;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -54,6 +57,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,17 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onLocationResult(LocationResult result) {
                 super.onLocationResult(result);
-                //mCurrentLocation = locationResult.getLastLocation();
                 mCurrentLocation = result.getLocations().get(0);
-
-
-                if(mCurrentLocation!=null)
-                {
-                    Log.e("Location(Lat)==",""+mCurrentLocation.getLatitude());
-                    Log.e("Location(Long)==",""+mCurrentLocation.getLongitude());
-                }
-
-
                 MarkerOptions options = new MarkerOptions();
                 options.position(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE);
@@ -183,15 +178,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Marker marker = mMap.addMarker(options);
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 17));
-                /**
-                 * To get location information consistently
-                 * mLocationRequest.setNumUpdates(1) Commented out
-                 * Uncomment the code below
-                 */
                 mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             }
 
-            //Locatio nMeaning that all relevant information is available
             @Override
             public void onLocationAvailability(LocationAvailability availability) {
                 //boolean isLocation = availability.isLocationAvailable();
@@ -317,9 +306,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setarDenuncias(List<Denuncia> denuncias) {
 
         for (Denuncia denuncia: denuncias) {
-//                Log.v("DENUNCIAS", denuncia.getDateCriacao()+"");
-//                LatLng latLng = new LatLng(denuncia.getLatitude(), denuncia.getLongitude());
-//                mMap.addMarker(new MarkerOptions().position(latLng).title(denuncia.getProblema()).icon();
                 setarNoMapa(denuncia);
         }
 
@@ -330,20 +316,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try{
 
 
-            MarkerOptions markerOptions = new MarkerOptions();
+            final MarkerOptions markerOptions = new MarkerOptions();
             LatLng latLng = new LatLng(denuncia.getLatitude(), denuncia.getLongitude());
             markerOptions.position(latLng).title(denuncia.getProblema());
             if(denuncia.isResolvido()){
                 markerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             }else {
-                markerOptions.icon( BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                Picasso.get().load(denuncia.getImagem()).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        markerOptions.icon( BitmapDescriptorFactory.fromBitmap(bitmap) );
+                        Marker marker = mMap.addMarker(markerOptions);
+                        marker.setTag(denuncia);
+
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+
             }
 
 
 
 
-            Marker marker = mMap.addMarker(markerOptions);
-            marker.setTag(denuncia);
+
 
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override

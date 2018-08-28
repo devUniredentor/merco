@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,7 +44,7 @@ public static void dialogNovaDenuncia(final FragmentActivity fragment, final Lat
     LayoutInflater inflater = fragment.getLayoutInflater();
     View dialogView = inflater.inflate(R.layout.dialog_nova_denuncia, null);
     dialogBuilder.setTitle("Denúncia");
-    final EditText editText = dialogView.findViewById(R.id.edt_comment);
+    final EditText editText = dialogView.findViewById(R.id.edtDescricao);
    //spinner conf
     final Spinner spinner = dialogView.findViewById(R.id.spinner);
     assert spinner != null;
@@ -102,10 +104,12 @@ public static void dialogDetalhesDenuncia(FragmentActivity fragment, final Denun
     final AlertDialog dialogBuilder = new AlertDialog.Builder(fragment).create();
     LayoutInflater inflater = fragment.getLayoutInflater();
     View dialogView = inflater.inflate(R.layout.dialog_detalhes_denuncia, null);
-    dialogBuilder.setTitle("Dethalhes");
+    dialogBuilder.setTitle("Detalhes");
     final TextView textViewProblema = dialogView.findViewById(R.id.textProblema);
     final TextView textViewDescricao = dialogView.findViewById(R.id.textDescricao);
     final Switch aSwitch = dialogView.findViewById(R.id.switchSolucionado);
+    ImageView imageViewFoto = dialogView.findViewById(R.id.image_foto);
+    TextView textViewNome = dialogView.findViewById(R.id.text_nome);
 
     if(denuncia.getIdUser().equals(mAuth.getCurrentUser().getUid())){
         aSwitch.setVisibility(View.VISIBLE);
@@ -124,6 +128,8 @@ public static void dialogDetalhesDenuncia(FragmentActivity fragment, final Denun
 
     textViewDescricao.setText(denuncia.getDescricao());
     textViewProblema.setText(denuncia.getProblema());
+    Picasso.get().load(denuncia.getImagem()).resize(100, 100).into(imageViewFoto);
+    textViewNome.setText(mAuth.getCurrentUser().getDisplayName());
 
     dialogBuilder.setView(dialogView);
     dialogBuilder.show();
