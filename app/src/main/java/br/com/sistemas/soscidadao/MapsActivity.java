@@ -408,7 +408,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //authenticating with firebase
                     firebaseAuthWithGoogle(account);
                 } catch (ApiException e) {
-                    Toast.makeText(MapsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MapsActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -428,11 +428,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            Toast.makeText(MapsActivity.this, "User Signed In", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MapsActivity.this, "Usuario Logado!", Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MapsActivity.this, "Authentication failed.",
+                            Toast.makeText(MapsActivity.this, "Falha na autenticação.",
                                     Toast.LENGTH_SHORT).show();
 
                         }

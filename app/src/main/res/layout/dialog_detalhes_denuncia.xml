@@ -4,25 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
-    android:padding="10dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
     >
 
-    <TableRow>
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/image_foto" android:layout_gravity="center_horizontal" android:layout_margin="2dp"/>
+    <TableRow
+        android:layout_marginTop="18dp"
+        >
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/image_foto" android:layout_gravity="left" />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/text_nome"/>
     </TableRow>
 
     <TableRow android:layout_marginTop="10dp">
         <TextView
-            android:textSize="16sp"
-            android:text="Problema:"
-            android:id="@+id/text1"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
+            android:layout_marginTop="18dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Problema:"
+            android:textColor="#80000000"
+            android:textSize="@dimen/customTitle"
             />
         <TextView
+            android:layout_marginTop="18dp"
             android:layout_below="@+id/text1"
             android:id="@+id/textProblema"
             android:layout_width="match_parent"
@@ -32,14 +35,15 @@
 
     <TableRow android:layout_marginTop="10dp">
         <TextView
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:text="Descrição:"
-            android:id="@+id/text2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Descrição:"
+            android:textColor="#80000000"
+            android:textSize="@dimen/customTitle"
             />
         <TextView
+            android:layout_marginTop="18dp"
             android:layout_below="@+id/text2"
             android:id="@+id/textDescricao"
             android:layout_width="match_parent"
@@ -57,7 +61,15 @@
             android:layout_height="wrap_content"
 
             />
+
+    <TextView
+        android:layout_marginTop="18dp"
+        android:text=""
+        android:textSize="30sp"/>
+
     </TableRow>
+
+
 
 
 

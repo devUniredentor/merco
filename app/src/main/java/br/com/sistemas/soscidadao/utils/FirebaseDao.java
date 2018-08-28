@@ -73,6 +73,7 @@ public static void dialogNovaDenuncia(final FragmentActivity fragment, final Lat
                             Denuncia denuncia = new Denuncia();
                             denuncia.setDescricao(descricao);
                             denuncia.setIdUser(mAuth.getCurrentUser().getUid());
+                            denuncia.setNameUser(mAuth.getCurrentUser().getDisplayName());
                             denuncia.setProblema(problema);
                             denuncia.setLatitude(latLng.latitude);
                             denuncia.setLongitude(latLng.longitude);
@@ -129,7 +130,7 @@ public static void dialogDetalhesDenuncia(FragmentActivity fragment, final Denun
     textViewDescricao.setText(denuncia.getDescricao());
     textViewProblema.setText(denuncia.getProblema());
     Picasso.get().load(denuncia.getImagem()).resize(100, 100).into(imageViewFoto);
-    textViewNome.setText(mAuth.getCurrentUser().getDisplayName());
+    textViewNome.setText(denuncia.getNameUser());
 
     dialogBuilder.setView(dialogView);
     dialogBuilder.show();

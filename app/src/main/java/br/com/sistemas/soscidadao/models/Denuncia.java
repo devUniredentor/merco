@@ -17,6 +17,15 @@ public class Denuncia implements Serializable {
     private boolean reportado;
     private long dateCriacao, dataFinalizacao;
     private double latitude, longitude;
+    private String nameUser;
+
+    public String getNameUser() {
+        return nameUser;
+    }
+
+    public void setNameUser(String nameUser) {
+        this.nameUser = nameUser;
+    }
 
     public String getImagem() {
         return imagem;
@@ -29,7 +38,7 @@ public class Denuncia implements Serializable {
     private String imagem;
 
 
-    public Denuncia(String id, String idUser, String problema, String descricao, boolean resolvido, boolean reportado, long dateCriacao, long dataFinalizacao, double latitude, double longitude, String imagem) {
+    public Denuncia(String id, String idUser, String problema, String descricao, boolean resolvido, boolean reportado, long dateCriacao, long dataFinalizacao, double latitude, double longitude, String nameUser, String imagem) {
         this.id = id;
         this.idUser = idUser;
         this.problema = problema;
@@ -40,6 +49,7 @@ public class Denuncia implements Serializable {
         this.dataFinalizacao = dataFinalizacao;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.nameUser = nameUser;
         this.imagem = imagem;
     }
 
